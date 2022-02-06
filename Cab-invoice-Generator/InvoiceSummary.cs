@@ -15,5 +15,6 @@ namespace Cab_invoice_Generator
         {
             AverageFarePerRide = TotalFare / TotalNumberOfRides;
         }
+
     }
 }
