@@ -1,5 +1,6 @@
 using Cab_invoice_Generator;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace CabInvoiceTest
 {
@@ -32,35 +33,43 @@ namespace CabInvoiceTest
         }
         [TestMethod]
         //step-2 test case
-        public void GivenMultipleRides_ShouldReturnTotalFare()
+        public void GivenUSerId_ShouldReturnInvoiceSummary()
         {
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-
-            Ride[] rides = { new Ride(2.0, 5),
-                new Ride(0.1, 1)
-            };
-            InvoiceSummary invoiceSummary = invoiceGenerator.CalculateFare(rides);
-            double expected = 30;
-            Assert.AreEqual(expected, invoiceSummary.TotalFare);
-        }
-        [TestMethod]
-        //step-3
-        public void GivenMultipleRides_ShouldReturnInvoiceSummary()
-        {
-            InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-
-            Ride[] rides = { new Ride(2.0, 5),
-                new Ride(0.1, 1)
-            };
-            InvoiceSummary invoiceSummary = invoiceGenerator.CalculateFare(rides);
+            string userId = "Appu";
+            Ride firstRide = new Ride(3.0, 5);
+            Ride secondRide = new Ride(1, 1);
+            List<Ride> rides = new List<Ride> { firstRide, secondRide };
+            UserAccount.AddRides(userId, rides);
+            InvoiceSummary invoiceSummary = invoiceGenerator.GetInvoiceSummary(userId);
             InvoiceSummary expected = new InvoiceSummary
             {
                 TotalNumberOfRides = 2,
-                TotalFare = 30,
-                AverageFarePerRide = 15
+                TotalFare = 46,
+                AverageFarePerRide = 23
             };
             object.Equals(expected, invoiceSummary);
         }
+        [TestMethod]
+
+        public void GivenPremiumRide_ShouldReturnInvoiceSummary()
+        {
+            InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+            string userId = "Appu";
+            Ride firstRide = new Ride(3.0, 5, "Premium");
+            Ride secondRide = new Ride(1, 1, "Normal");
+            List<Ride> rides = new List<Ride> { firstRide, secondRide };
+            UserAccount.AddRides(userId, rides);
+            InvoiceSummary invoiceSummary = invoiceGenerator.GetInvoiceSummary(userId);
+            InvoiceSummary expected = new InvoiceSummary
+            {
+                TotalNumberOfRides = 2,
+                TotalFare = 66,
+                AverageFarePerRide = 33
+            };
+            Assert.AreEqual(expected.TotalFare, invoiceSummary.TotalFare);
+        }
+
 
     }
 }
