@@ -19,5 +19,15 @@ namespace Cab_invoice_Generator
             }
             return totalFare;
         }
+        //step-2 Multiple Rides added 
+        public double CalculateFare(Ride[] rides)
+        {
+            double totalFare = 0;
+            foreach (Ride ride in rides)
+            {
+                totalFare += this.CalculateFare(ride.distance, ride.time);
+            }
+            return totalFare;
+        }
     }
 }
